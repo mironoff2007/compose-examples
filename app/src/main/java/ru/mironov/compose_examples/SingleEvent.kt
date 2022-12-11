@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 
 class SingleEvent<T> {
 
-    private val mutableLiveData = MutableLiveData<T>(null)
+    val mutableLiveData = MutableLiveData<T>(null)
 
-    private var state: T? = null
+    var state: T? = null
 
     fun onEvent(onEvent: (T) -> Unit) {
         val currentState = state
@@ -22,7 +22,7 @@ class SingleEvent<T> {
     }
 
     @Composable
-    fun Observe() {
+    inline fun Observe() {
         val currentState by mutableLiveData.observeAsState()
         this.state = currentState
     }

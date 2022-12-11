@@ -121,8 +121,6 @@ fun Home(openDrawer: () -> Unit, viewModel: HomeViewModel, navController: NavHos
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val flag by viewModel.flag.observeAsState()
-
         viewModel.event.Observe()
         viewModel.event.onEvent {
             when (it) {
@@ -132,13 +130,11 @@ fun Home(openDrawer: () -> Unit, viewModel: HomeViewModel, navController: NavHos
             }
         }
 
-        viewModel.log( "toggle - $flag")
+        //viewModel.log( "toggle - $flag")
 
         Text(text = "Home", fontSize = 40.sp)
         Button(onClick = {
             viewModel.event.postEvent(HomeViewModel.Event.ButtonEvent)
-            viewModel.toggle()
-            viewModel.toggleAfterDelay(500)
         }) {
             Text(text = "click event", fontSize = 40.sp)
         }
