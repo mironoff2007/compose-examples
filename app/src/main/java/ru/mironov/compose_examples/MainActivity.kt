@@ -3,7 +3,9 @@ package ru.mironov.compose_examples
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -11,10 +13,11 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -113,9 +116,32 @@ fun Home(openDrawer: () -> Unit, viewModel: HomeViewModel, navController: NavHos
         buttonIcon = Icons.Filled.Menu,
         onButtonClicked = { openDrawer() }
     )
-    Box(modifier = Modifier.fillMaxSize(),
-    contentAlignment = Alignment.Center) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        val flag by viewModel.flag.observeAsState()
+
+        viewModel.event.Observe()
+        viewModel.event.onEvent {
+            when (it) {
+                is HomeViewModel.Event.ButtonEvent -> {
+                    viewModel.log( "Button click event")
+                }
+            }
+        }
+
+        viewModel.log( "toggle - $flag")
+
         Text(text = "Home", fontSize = 40.sp)
+        Button(onClick = {
+            viewModel.event.postEvent(HomeViewModel.Event.ButtonEvent)
+            viewModel.toggle()
+            viewModel.toggleAfterDelay(500)
+        }) {
+            Text(text = "click event", fontSize = 40.sp)
+        }
     }
 
 }
