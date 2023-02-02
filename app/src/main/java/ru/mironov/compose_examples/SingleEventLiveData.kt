@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.MutableLiveData
 
-class SingleEvent<T> {
+class SingleEventLiveData<T> {
 
     val mutableLiveData = MutableLiveData<T>(null)
 

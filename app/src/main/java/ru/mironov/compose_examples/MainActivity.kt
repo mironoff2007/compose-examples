@@ -3,21 +3,19 @@ package ru.mironov.compose_examples
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -34,6 +32,7 @@ import ru.mironov.compose_examples.ui.navigation.DrawerScreens
 import ru.mironov.compose_examples.ui.navigation.NavigationTree
 import ru.mironov.compose_examples.ui.navigation.TopBar
 import ru.mironov.compose_examples.ui.theme.ComposeexamplesTheme
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -125,7 +124,16 @@ fun Home(openDrawer: () -> Unit, viewModel: HomeViewModel, navController: NavHos
         viewModel.event.onEvent {
             when (it) {
                 is HomeViewModel.Event.ButtonEvent -> {
-                    viewModel.log( "Button click event")
+                    viewModel.log( "Button click event livedata")
+                }
+            }
+        }
+
+        viewModel.flowEvent.Observe()
+        viewModel.flowEvent.onEvent {
+            when (it) {
+                is HomeViewModel.Event.ButtonEvent -> {
+                    viewModel.log( "Button click event flow")
                 }
             }
         }
@@ -133,11 +141,24 @@ fun Home(openDrawer: () -> Unit, viewModel: HomeViewModel, navController: NavHos
         //viewModel.log( "toggle - $flag")
 
         Text(text = "Home", fontSize = 40.sp)
-        Button(onClick = {
+        Button(
+            modifier = Modifier.padding(10.dp),
+            onClick = {
             viewModel.event.postEvent(HomeViewModel.Event.ButtonEvent)
-        }) {
+            viewModel.postFlowEvent(HomeViewModel.Event.ButtonEvent)
+            }
+        ) {
             Text(text = "click event", fontSize = 40.sp)
         }
+
+        val numb = remember { mutableStateOf(Math.random()) }
+        Button(
+            modifier = Modifier.padding(10.dp),
+            onClick = { numb.value = Math.random() }
+        ) {
+            Text(text = "random", fontSize = 40.sp)
+        }
+        Text(text = (numb.value *10).roundToInt().toString(), fontSize = 40.sp)
     }
 
 }
