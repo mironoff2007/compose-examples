@@ -5,25 +5,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class SingleEventFlow<T> {
 
-    val flow = MutableStateFlow<T?>(null)
+    val flow: StateFlow<T?>
+        get() { return _flow.asStateFlow() }
+
+    private val  _flow = MutableStateFlow<T?>(null)
 
     var state: T? = null
 
     fun onEvent(onEvent: (T) -> Unit) {
         val currentState = state
-        flow.value = null
+        _flow.value = null
         currentState?.let { onEvent.invoke(currentState) }
     }
 
     suspend fun postEventSuspend(event: T) {
-        flow.emit(event)
+        _flow.emit(event)
     }
 
     fun postEvent(event: T) {
-        flow.tryEmit(event)
+        _flow.tryEmit(event)
     }
 
     @Composable
@@ -31,5 +36,4 @@ class SingleEventFlow<T> {
         val currentState by flow.collectAsState()
         this.state = currentState
     }
-
 }
