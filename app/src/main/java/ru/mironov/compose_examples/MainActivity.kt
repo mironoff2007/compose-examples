@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import kotlinx.coroutines.launch
 import ru.mironov.compose_examples.ui.AccountViewModel
 import ru.mironov.compose_examples.ui.HelpViewModel
 import ru.mironov.compose_examples.ui.HomeViewModel
+import ru.mironov.compose_examples.ui.WorldMap
 import ru.mironov.compose_examples.ui.navigation.Drawer
 import ru.mironov.compose_examples.ui.navigation.DrawerScreens
 import ru.mironov.compose_examples.ui.navigation.NavigationTree
@@ -178,13 +178,7 @@ fun Help(openDrawer: () -> Unit, viewModel: HelpViewModel, navController: NavHos
 
 @Composable
 fun Account(openDrawer: () -> Unit, viewModel: AccountViewModel, navController: NavHostController) {
-    TopBar(
-        title = "Account",
-        buttonIcon = Icons.Filled.AccountCircle,
-        onButtonClicked = { openDrawer() }
-    )
-    Box(modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center) {
-        Text(text = "Account", fontSize = 40.sp)
+    Box(modifier = Modifier.fillMaxHeight()) {
+        WorldMap()
     }
 }
